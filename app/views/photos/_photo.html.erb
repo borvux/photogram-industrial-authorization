@@ -9,12 +9,15 @@
         </h2>
 
         <div>
-          <%= link_to edit_photo_path(photo), class: "btn btn-link btn-sm text-muted" do %>
-            <i class="fas fa-edit fa-fw"></i>
-          <% end %>
+          <!-- if a photo is not owned by someone, then they shouldn’t even see the edit or delete links -->
+          <% if current_user == photo.owner %>
+            <%= link_to edit_photo_path(photo), class: "btn btn-link btn-sm text-muted" do %>
+              <i class="fas fa-edit fa-fw"></i>
+            <% end %>
 
-          <%= button_to photo, method: :delete, class: "btn btn-link btn-sm text-muted", form_class: "d-inline-block" do %>
-            <i class="fas fa-trash fa-fw"></i>
+            <%= button_to photo, method: :delete, class: "btn btn-link btn-sm text-muted", form_class: "d-inline-block" do %>
+              <i class="fas fa-trash fa-fw"></i>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -32,7 +35,7 @@
         <% photo.comments.default_order.each do |comment| %>
           <%= render "comments/comment", comment: comment %>
         <% end %>
-        
+
         <div class="card-body">
           <%= render "comments/form", comment: photo.comments.build %>
         </div>
