@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :comments
-  resources :follow_requests
-  resources :likes
-  resources :photos
-  resources :users, only: [ :index ]
+  resources :follow_requests, except: [:index, :show, :new, :edit] # we only want the create, update, and destroy part of this resource, but not the read.
+  resources :likes, only: [:create, :destroy] # you can like and unlike, you can't edit likes
+  resources :photos, except: [:index] # we do not need index for photos routes
+  resources :users, only: [:index]
 
   get ":username" => "users#show", as: :user
   get ":username/liked" => "users#liked", as: :liked
