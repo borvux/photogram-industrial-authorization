@@ -4,12 +4,15 @@
   </div>
 </div>
 
-<div class="row mb-2">
-  <div class="col-md-6 offset-md-3">
-    <%= render "users/profile_nav", user: @user %>
+<!-- check if the profile is the current user or the profile is public or if the current_user has an accepted follow request from the page of the user they are on (@user) -->
+<% if current_user == @user || !@user.private? || current_user.leaders.include?(@user) %>
+  <div class="row mb-2">
+    <div class="col-md-6 offset-md-3">
+      <%= render "users/profile_nav", user: @user %>
+    </div>
   </div>
-</div>
 
-<% @user.own_photos.each do |photo| %>
-  <%= render "photos/photo", photo: photo %>
+  <% @user.own_photos.each do |photo| %>
+    <%= render "photos/photo", photo: photo %>
+  <% end %>
 <% end %>
