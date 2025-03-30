@@ -1,7 +1,6 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: %i[ show edit update destroy ]
-  # we want to prevent a user from creating or deleting if they aren’t allowed to
-  before_action :is_an_authorized_user, only: [:destroy, :create]
+  before_action :is_an_authorized_user, only: [:create]
 
   # GET /comments or /comments.json
   def index
