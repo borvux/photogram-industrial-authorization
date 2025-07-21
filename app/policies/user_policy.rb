@@ -6,9 +6,32 @@ class UserPolicy < ApplicationPolicy
     @user = user
   end
 
+  def show?
+    true
+  end
+
+  def feed?
+    user == current_user
+  end
+
+  def discover?
+    feed?
+  end
+
   def show_photos?
     user == current_user ||
      !user.private? || 
      user.followers.include?(current_user)
+  end
+
+  def liked?
+    show_photos?
+  end
+
+  class Scope < Scope
+    def resolve
+      # anyone can search for any other user.
+      scope.all
+    end
   end
 end
