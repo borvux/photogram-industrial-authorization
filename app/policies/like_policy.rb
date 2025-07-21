@@ -7,7 +7,7 @@ class LikePolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    user.present? # or PhotoPolicy.new(user, like.photo).show?
   end
 
   def destroy?

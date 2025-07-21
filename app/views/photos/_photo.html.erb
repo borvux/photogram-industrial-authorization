@@ -10,7 +10,8 @@
 
         <div>
           <!-- if a photo is not owned by someone, then they shouldn’t even see the edit or delete links -->
-          <% if current_user == photo.owner %>
+          <%# if current_user == photo.owner %>
+          <% if policy(photo).update? %>
             <%= link_to edit_photo_path(photo), class: "btn btn-link btn-sm text-muted" do %>
               <i class="fas fa-edit fa-fw"></i>
             <% end %>
