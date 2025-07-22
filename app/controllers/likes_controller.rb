@@ -3,25 +3,31 @@ class LikesController < ApplicationController
 
   # GET /likes or /likes.json
   def index
-    @likes = Like.all
+    @likes = policy_scope(Like)
   end
 
   # GET /likes/1 or /likes/1.json
   def show
+    authorize @like
   end
 
   # GET /likes/new
   def new
     @like = Like.new
+
+    authorize @like
   end
 
   # GET /likes/1/edit
   def edit
+    authorize @like
   end
 
   # POST /likes or /likes.json
   def create
     @like = Like.new(like_params)
+
+    authorize @like
 
     respond_to do |format|
       if @like.save
@@ -36,6 +42,8 @@ class LikesController < ApplicationController
 
   # PATCH/PUT /likes/1 or /likes/1.json
   def update
+    authorize @like
+
     respond_to do |format|
       if @like.update(like_params)
         format.html { redirect_to @like, notice: "Like was successfully updated." }
@@ -49,6 +57,8 @@ class LikesController < ApplicationController
 
   # DELETE /likes/1 or /likes/1.json
   def destroy
+    authorize @like
+    
     @like.destroy
     respond_to do |format|
       format.html { redirect_back fallback_location: @like.photo, notice: "Like was successfully destroyed." }
