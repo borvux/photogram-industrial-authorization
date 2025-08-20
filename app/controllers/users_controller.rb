@@ -8,17 +8,17 @@ class UsersController < ApplicationController
 
   private
 
-  def set_user
-    if params[:username]
-      @user = User.find_by!(username: params.fetch(:username))
-    else
-      @user = current_user
+    def set_user
+      if params[:username]
+        @user = User.find_by!(username: params.fetch(:username))
+      else
+        @user = current_user
+      end
     end
-  end
 
-  def ensure_current_user
-    if current_user != @user
-      redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+    def ensure_current_user
+      if current_user != @user
+        redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+      end
     end
-  end
 end

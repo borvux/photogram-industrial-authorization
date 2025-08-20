@@ -61,46 +61,45 @@ class CommentsController < ApplicationController
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_comment
+      @comment = Comment.find(params[:id])
+    end
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_comment
-    @comment = Comment.find(params[:id])
-  end
+    # # users should only be able to comment on photos in the app if they are following the user or the user is public or it's their photos
+    # def is_an_authorized_user
+    #   # we don’t want to be looking at the owner of the comment! we want the owner of the photo that is being commented on
+    #   @photo = Photo.find(params.fetch(:comment).fetch(:photo_id))
+    #   if current_user != @photo.owner && @photo.owner.private? && !current_user.leaders.include?(@photo.owner)
+    #     redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+    #   end
+    # end
 
-  # # users should only be able to comment on photos in the app if they are following the user or the user is public or it's their photos
-  # def is_an_authorized_user
-  #   # we don’t want to be looking at the owner of the comment! we want the owner of the photo that is being commented on
-  #   @photo = Photo.find(params.fetch(:comment).fetch(:photo_id))
-  #   if current_user != @photo.owner && @photo.owner.private? && !current_user.leaders.include?(@photo.owner)
-  #     redirect_back fallback_location: root_url, alert: "You're not authorized for that"
-  #   end
-  # end
+    # def is_a_comment_author
+    #   if current_user != @comment.author
+    #     redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+    #   end
+    # end
 
-  # def is_a_comment_author
-  #   if current_user != @comment.author
-  #     redirect_back fallback_location: root_url, alert: "You're not authorized for that"
-  #   end
-  # end
-
-  # combining is_an_authorized_user and is_a_comment_author
-  def authorize_comment_action
-    case action_name
-    when "create"
-      # creation, we check if the user is allowed to comment on the photo.
-      @photo = Photo.find(params.fetch(:comment).fetch(:photo_id))
-      unless current_user == @photo.owner || !@photo.owner.private? || current_user.leaders.include?(@photo.owner)
-        redirect_back fallback_location: root_url, alert: "You're not authorized for that"
-      end
-    when "edit", "update", "destroy"
-      # editing/updating/destroying, we verify the user is the comment's author.
-      unless current_user == @comment.author
-        redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+    # combining is_an_authorized_user and is_a_comment_author
+    def authorize_comment_action
+      case action_name
+      when "create"
+        # creation, we check if the user is allowed to comment on the photo.
+        @photo = Photo.find(params.fetch(:comment).fetch(:photo_id))
+        unless current_user == @photo.owner || !@photo.owner.private? || current_user.leaders.include?(@photo.owner)
+          redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+        end
+      when "edit", "update", "destroy"
+        # editing/updating/destroying, we verify the user is the comment's author.
+        unless current_user == @comment.author
+          redirect_back fallback_location: root_url, alert: "You're not authorized for that"
+        end
       end
     end
-  end
 
-  # Only allow a list of trusted parameters through.
-  def comment_params
-    params.require(:comment).permit(:author_id, :photo_id, :body)
-  end
+    # Only allow a list of trusted parameters through.
+    def comment_params
+      params.require(:comment).permit(:author_id, :photo_id, :body)
+    end
 end
